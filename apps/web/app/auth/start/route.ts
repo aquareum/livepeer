@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 import { seal } from "@/lib/auth/seal";
 import { FLOW_COOKIE, authProvider, sessionSecret } from "@/lib/auth/session";
+import { testSignInRefused } from "@/lib/auth/test-sign-in";
 import type { SignInMethod } from "@/lib/auth/types";
 import { signInMethods } from "@/lib/auth/methods";
 import { nativeStart, type NativeFlow } from "@/lib/devices/flow";
@@ -39,6 +40,11 @@ export async function GET(request: NextRequest) {
     const next = params.get("next");
     if (next) url.searchParams.set("next", next);
     return NextResponse.redirect(url);
+  }
+  // The test sign-in answers only where the public can't reach (`testSignInRefused`).
+  if (await testSignInRefused(request)) {
+    if (native) return native.fail("method");
+    return NextResponse.redirect(new URL("/sign-in?error=test_only", origin));
   }
   const email = params.get("email")?.trim();
   const state = randomBytes(16).toString("base64url");

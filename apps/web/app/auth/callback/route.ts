@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { isFresh } from "@/lib/auth/fresh";
 import { seal, unseal } from "@/lib/auth/seal";
 import { admitted } from "@/lib/auth/sign-up";
+import { testSignInRefused } from "@/lib/auth/test-sign-in";
 import { FLOW_COOKIE, SESSION_COOKIE, authProvider, createSession, sessionSecret } from "@/lib/auth/session";
 import { appCallback, devices, mobileEnabled } from "@/lib/devices";
 import { returnToApp, type NativeFailure, type NativeFlow } from "@/lib/devices/flow";
@@ -45,6 +46,8 @@ export async function GET(request: NextRequest) {
     finish(flow?.native && callback ? returnToApp(callback, { error: reason, state: flow.native.state }) : NextResponse.redirect(new URL(`/sign-in?error=${reason === "expired" || reason === "closed" ? reason : "failed"}`, origin)));
 
   if (!code || !flow || flow.state !== params.get("state")) return fail("expired");
+  // Checked again where the session is made: the test sign-in answers only where the public can't reach.
+  if (await testSignInRefused(request)) return fail("failed");
   const redirectUri = new URL("/auth/callback", origin).toString();
   let identity;
   let authenticatedAt;

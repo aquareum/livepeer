@@ -113,6 +113,9 @@ The engine version is pinned per release in `release.config.json`, so the app an
 - **Sign-in ends on "Sign-in didn't complete"**: the app's log has a line starting `[auth] sign-in failed:`
   with the step and the identity provider's error code (`docker logs livepeer-app-1 2>&1 | grep '\[auth\]'`).
   `invalid_client` is a wrong `OIDC_CLIENT_SECRET`.
+- **Visitors see "This instance has only its test sign-in"**: the instance is published but still uses the
+  presets' test sign-in, which answers only from the server and private networks. Connect an identity
+  provider (`deploy/README.md`, "Sign-in on a public address").
 - **Health is 500 right after changing config**: the config is invalid. Run `./livepeer doctor`.
 
 ## Working on the code

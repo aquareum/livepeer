@@ -1,6 +1,8 @@
 #!/bin/sh
 # Installs an instance on a fresh Debian or Ubuntu VPS. Run as root from a checkout of this repository:
 #   DOMAIN=video.example.com sh deploy/templates/vps/install.sh
+# The instance starts with the presets' test sign-in, which answers only on this server: visitors at DOMAIN
+# are told it needs an identity provider. Connect one (deploy/README.md, "Sign-in on a public address").
 set -eu
 
 : "${DOMAIN:?Set DOMAIN to the hostname that points at this server}"

@@ -161,6 +161,19 @@ credentials the console on phones works as before and says alerts aren't set up.
 - `templates/fly/` — Fly.io, app only, pointed at an engine you run elsewhere.
 - `templates/vercel/` — Vercel, app only, with a managed Postgres such as Neon. Read its README first.
 
+## Sign-in on a public address
+
+The presets sign in with a test sign-in that lets anyone in as a sample user, or as the sample operator.
+That is fine for a first look and never for an instance people can reach, so a production build offers it
+only to the machine the instance runs on and to private networks, and not at all once the config names a
+public `domain`. Anyone else who tries is told the instance needs an identity provider. To publish an
+instance, connect one first: `auth.provider` `"oidc"` with its issuer and client id in the config, and
+`OIDC_CLIENT_SECRET` in `.env`. Until then you can look at it from the server, or through an SSH tunnel
+(`ssh -L 3000:127.0.0.1:3000 <server>`, then `http://localhost:3000`).
+
+`ALLOW_TEST_SIGN_IN=1` in `.env` turns this off, for a demo that is meant to be open to anyone, or one
+something else in front of it already protects.
+
 ## Your first operator
 
 An instance starts with nobody running it. How its first owner gets in depends on how it was deployed:

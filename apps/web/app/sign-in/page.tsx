@@ -15,6 +15,7 @@ export const metadata: Metadata = { title: "Sign in" };
 const ERRORS: Record<string, string> = {
   expired: "That sign-in attempt expired. Choose how to sign in again.",
   failed: "Sign-in didn’t complete. Try again, or pick another way.",
+  test_only: "This instance has only its test sign-in, which works from the machine it runs on. Whoever runs it needs to connect an identity provider before anyone can sign in here.",
   closed: "This instance isn’t taking new accounts. If you already have one, sign in the way you did before.",
 };
 
